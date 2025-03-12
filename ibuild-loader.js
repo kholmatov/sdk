@@ -19,15 +19,10 @@
       container = document.querySelector(options.container);
     }
 
-    // If container is not found, create a default floating container
+    // If container is not found, exit (no fallback!)
     if (!container) {
-      container = document.createElement('div');
-      container.id = 'ibuild-widget-container';
-      container.style.position = 'fixed';
-      container.style.bottom = '20px';
-      container.style.right = '20px';
-      container.style.zIndex = '9999';
-      document.body.appendChild(container);
+      console.error('iBuild SDK: Container not found. Please provide a valid container.');
+      return;
     }
 
     // Inject styles
@@ -87,15 +82,15 @@
     // Expose methods to interact with the widget
     window.iBuild = {
       destroy: function() {
-        container.remove();
+        widget.remove();
         window.iBuildWidgetLoaded = false;
         console.log('iBuild widget has been removed.');
       },
       show: function() {
-        container.style.display = 'block';
+        widget.style.display = 'block';
       },
       hide: function() {
-        container.style.display = 'none';
+        widget.style.display = 'none';
       },
       container: container, // for direct DOM access if needed
     };
@@ -103,14 +98,7 @@
     console.log('iBuild widget has been initialized.');
   }
 
-  // Automatically initialize if no manual init is called (optional)
-  document.addEventListener('DOMContentLoaded', function() {
-    if (!window.iBuildAutoInit) {
-      init(); // auto attach if no explicit init is called
-    }
-  });
-
-  // Export the init function
+  // Export only the manual init function (no auto-init!)
   window.iBuildSDK = {
     init,
   };
